@@ -19,7 +19,7 @@
 	  "editor.tabSize": 2,
 	  "editor.rulers": [ 80 ],
 	  "editor.formatOnSave": true
-	},
+	}
       },
       "extensions": ["ocamllabs.ocaml-platform"]
     },
@@ -41,7 +41,7 @@
     }
   },
 
-  "postCreateCommand": "bash .devcontainer/postCreatCommand.sh",
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
 
   // "forwardPorts": [8000, 5173],
 
