@@ -1,5 +1,5 @@
 {
-  "name": "Deno",
+  "name": "OCaml",
 
   "image": "mcr.microsoft.com/vscode/devcontainers/base:debian-11",
 
