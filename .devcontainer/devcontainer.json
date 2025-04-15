@@ -1,7 +1,7 @@
 {
   "name": "OCaml",
 
-  "image": "mcr.microsoft.com/vscode/devcontainers/base:debian-11",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:debian-12",
 
   "features": {
     "ghcr.io/devcontainers-extra/features/ocaml-opam:1": {
