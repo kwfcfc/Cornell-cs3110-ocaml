@@ -1,0 +1,4 @@
+(executables
+ (names test exercises)
+ (libraries ounit2))
+  
