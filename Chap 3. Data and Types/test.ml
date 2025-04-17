@@ -1,0 +1,54 @@
+open OUnit2
+open Exercises
+
+let exercise1_expected = [1; 2; 3; 4; 5]
+
+let tests = "test suite for exercises of Chapter 3" >::: [
+  (* Exercise list *)
+  "bracket list 1" >:: (fun _ -> assert_equal exercise1_expected bracket_list1);
+  "bracket list 2" >:: (fun _ -> assert_equal exercise1_expected bracket_list2);
+  "bracket list 3" >:: (fun _ -> assert_equal exercise1_expected bracket_list3);
+
+  (* Exercise product *)
+  "product of empty" >:: (fun _ -> assert_equal 1 (product []));
+  "product of [2, 2, 7]" >:: (fun _ -> assert_equal 28 (product [2; 2; 7]));
+  "product of [-2, 5, 11]" >:: (fun _ -> 
+    assert_equal (-110) (product [-2; 5; 11]));
+
+  (* Exercise concat*)
+  "concat of empty" >:: (fun _ -> assert_equal "" (concat []));
+  "concat of [h; e; l; l; o]" >:: (fun _ -> 
+    assert_equal "hello" (concat ["h"; "e"; "l"; "l"; "o"]));
+  
+  (* Exercise patterns *)
+  "match bigred empty" >:: (fun _ ->
+    assert_bool "Empty list match fails" (not (match_bigred [])));
+  "match bigred no element" >:: (fun _ ->
+    assert_bool "No big red match fails"
+    (not (match_bigred ["bigblue"; "l"; "bigGreen"])));
+  "match bigred found " >:: (fun _ ->
+    assert_bool "found big red"
+    (match_bigred ["bigblue"; "bigred"; "yellow"]));
+  (* match list with 2 or 4 *)
+  "match list with 2" >:: (fun _ ->
+    assert_bool "list of 2"
+    (match_2or4 ["bigblue"; "bigred"]));
+  "match list with 4" >:: (fun _ ->
+    assert_bool "list of 4"
+    (match_2or4 [8; 9; 6; 4]));
+  "match list with other" >:: (fun _ ->
+    assert_bool "list of 3"
+    (not (match_2or4 [6; 1; 5])));
+  (* match list with the same first 2 elements *)
+  "match list [1; 2]" >:: (fun _ ->
+    assert_bool "list of 2"
+    (not (match_first2 [1; 2])));
+  "match list true" >:: (fun _ ->
+    assert_bool "list of 3"
+    (match_first2 ["a"; "a"; "g"]));
+  "match list only 1 element" >:: (fun _ ->
+    assert_bool "list of 1"
+    (not (match_first2 [true])));
+]
+
+let _ = run_test_tt_main tests
