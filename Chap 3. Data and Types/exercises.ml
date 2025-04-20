@@ -43,8 +43,44 @@ let last_in_list lst = List.hd (List.rev lst)
 let any_zeros (lst : int list) = List.exists (fun any -> any = 0) lst
 
 (* Exercise: take drop*)
+
 let rec take n lst =
   match (n, lst) with
   | 0, _ -> []
   | _, [] -> []
   | k, h :: t -> h :: take (k - 1) t
+
+(* drop function, already tail recursive *)
+let rec drop n lst =
+  match (n, lst) with
+  | 0, t -> t
+  | _, [] -> []
+  | k, _ :: t -> (drop [@tailcall]) (k - 1) t
+
+let take_tail n lst =
+  let rec helper acc n lst =
+    match (n, lst) with
+    | 0, _ | _, [] -> acc
+    | k, h :: t -> (helper [@tailcall]) (h :: acc) (k - 1) t
+  in
+  List.rev (helper [] n lst)
+
+(* Exercise: unimodal *)
+
+let is_unimodal (lst : int list) =
+  (*
+     * pass_list get the head from its previous call, determine if
+  *)
+  let rec pass_list (h : int) (increasing : bool) (lst : int list) =
+    match lst with
+    | [] -> true
+    | k :: t -> (
+      match (compare h k, increasing) with
+      | 0, _ | -1, true | 1, false -> pass_list k increasing t
+      | -1, false -> false
+      | 1, true -> pass_list k (not increasing) t
+      | _, _ -> assert false (* compare should not return any other integer*))
+  in
+  match lst with
+  | [] -> true
+  | h :: t -> pass_list h true t

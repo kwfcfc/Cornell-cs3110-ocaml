@@ -28,6 +28,3 @@ setup.log
 
 # Local OPAM switch
 _opam/
-
-# OCamlformat ignored files
-.ocamlformat
