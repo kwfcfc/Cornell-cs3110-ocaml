@@ -3,6 +3,24 @@ open Exercises
 
 let exercise1_expected = [ 1; 2; 3; 4; 5 ]
 
+let sort_list_of_lists (lst : int list list) =
+  let sorted_sublist = List.map (List.sort compare) lst in
+  let rec compare_list (a : int list) (b : int list) =
+    if List.length a = List.length b then
+      match (a, b) with
+      | h1 :: t1, h2 :: t2 ->
+        if h1 = h2 then compare_list t1 t2 else compare h1 h2
+      | [], [] -> 0
+      | _ -> compare (List.length a) (List.length b)
+    else compare (List.length a) (List.length b)
+  in
+  List.sort compare_list sorted_sublist
+
+(* Sample data for pokemon*)
+let p1 = { name = "Charmander"; hp = 39; ptype = Fire }
+let p2 = { name = "Bulbasaur"; hp = 45; ptype = Normal }
+let p3 = { name = "Squirtle"; hp = 44; ptype = Water }
+
 let tests =
   "test suite for exercises of Chapter 3"
   >::: [
@@ -92,6 +110,87 @@ let tests =
          ( "Drop long list" >:: fun _ ->
            assert_equal [ 999_998; 999_999 ]
              (drop 999_998 (List.init 1_000_000 Fun.id)) );
+         (*
+            * Exercise unimodal
+         *)
+         ( "Unimodal for empty list" >:: fun _ ->
+           assert_bool "Unimodal" (is_unimodal []) );
+         ( "Unimodal for constant list" >:: fun _ ->
+           assert_bool "Unimodal" (is_unimodal [ 3; 3; 3; 3; 3 ]) );
+         ( "Unimodal with increasing and decreasing" >:: fun _ ->
+           assert_bool "Unimodal up and down" (is_unimodal [ 8; 9; 6; 4 ]) );
+         ( "Unimodal with increasing list" >:: fun _ ->
+           assert_bool "Unimodal up" (is_unimodal [ 1; 8; 9; 12 ]) );
+         ( "Unimodal with descreasing list" >:: fun _ ->
+           assert_bool "Unimodal down" (is_unimodal [ 9; 8; 4; 2 ]) );
+         ( "Not unimodal" >:: fun _ ->
+           assert_bool "Not unimodal" (not (is_unimodal [ 1; 9; 8; 9 ])) );
+         (*
+            * Exercise powerset
+         *)
+         ( "Powerset on smal list" >:: fun _ ->
+           assert_equal
+             (sort_list_of_lists
+                [
+                  [ 8; 9; 6 ]; [ 8; 9 ]; [ 8; 6 ]; [ 9; 6 ]; [ 8 ]; [ 9 ]; [ 6 ];
+                ])
+             (sort_list_of_lists (powerset [ 8; 9; 6 ])) );
+         (*
+            * Exercise Student
+         *)
+         ( "create_student basic" >:: fun _ ->
+           let s = create_student "Ada" "Lovelace" 4.0 in
+           assert_equal "Ada" s.first_name;
+           assert_equal "Lovelace" s.last_name;
+           assert_equal 4.0 s.gpa );
+         ( "get_name test" >:: fun _ ->
+           let fname, lname = get_name my_student in
+           assert_equal "Goba" fname;
+           assert_equal "Lewis" lname );
+         ( "equality test" >:: fun _ ->
+           let s1 = create_student "A" "B" 3.1 in
+           let s2 = { first_name = "A"; last_name = "B"; gpa = 3.1 } in
+           assert_equal s1 s2 );
+         (*
+            * Exercise pokerecord
+         *)
+         ( "charizard data" >:: fun _ ->
+           assert_equal "charizard" charizard.name;
+           assert_equal 78 charizard.hp;
+           assert_equal Fire charizard.ptype );
+         ( "squirtle data" >:: fun _ ->
+           assert_equal "squirtle" squirtle.name;
+           assert_equal 44 squirtle.hp;
+           assert_equal Water squirtle.ptype );
+         ( "distinct poketype" >:: fun _ ->
+           assert_bool "Fire ≠ Water" (Fire <> Water);
+           assert_bool "Normal ≠ Fire" (Normal <> Fire) );
+         (*
+            * Exercise on safe hd and tl
+         *)
+         ( "safe_hd on non-empty list" >:: fun _ ->
+           assert_equal (Some 1) (safe_hd [ 1; 2; 3 ]) );
+         ("safe_hd on empty list" >:: fun _ -> assert_equal None (safe_hd []));
+         ( "safe_tl on non-empty list" >:: fun _ ->
+           assert_equal (Some [ 2; 3 ]) (safe_tl [ 1; 2; 3 ]) );
+         ( "safe_tl on singleton list" >:: fun _ ->
+           assert_equal (Some []) (safe_tl [ 42 ]) );
+         ("safe_tl on empty list" >:: fun _ -> assert_equal None (safe_tl []));
+         (*
+            * Exercise find max hp in pokemon list
+         *)
+         ( "max_hp normal case" >:: fun _ ->
+           let lst = [ p1; p2; p3 ] in
+           let result = max_hp lst in
+           assert_equal (Some p2) result );
+         ( "max_hp with one element" >:: fun _ ->
+           assert_equal (Some p3) (max_hp [ p3 ]) );
+         ("max_hp with empty list" >:: fun _ -> assert_equal None (max_hp []));
+         (* save the first greatest hp *)
+         ( "max_hp with equal hp" >:: fun _ ->
+           let a = { name = "A"; hp = 50; ptype = Normal } in
+           let b = { name = "B"; hp = 50; ptype = Water } in
+           assert_equal (Some a) (max_hp [ a; b ]) );
        ]
 
 let _ = run_test_tt_main tests
