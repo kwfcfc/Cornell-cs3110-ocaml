@@ -135,11 +135,179 @@ let max_hp (pokemon_list : pokemon list) =
       match safe_hd curr_list with
       | None -> max
       | Some poke ->
-        if poke.hp > max.hp then max_helper poke (safe_tl curr_list)
-        else max_helper max (safe_tl curr_list))
+        if poke.hp > max.hp then
+          (max_helper [@tailcall]) poke (safe_tl curr_list)
+        else (max_helper [@tailcall]) max (safe_tl curr_list))
   in
   match safe_hd pokemon_list with
   | Some poke -> Some (max_helper poke (safe_tl pokemon_list))
   | None -> None
 
 (* Exercise: date before*)
+type date = int * int * int
+
+let is_before date1 date2 =
+  let (y1, m1, d1), (y2, m2, d2) = (date1, date2) in
+  match compare y1 y2 with
+  | -1 -> true
+  | 1 -> false
+  | _ -> (
+    match compare m1 m2 with
+    | -1 -> true
+    | 1 -> false
+    | _ -> d1 < d2)
+
+(* Exercise: earliest date *)
+let earliest (dates : date list) =
+  let rec min_helper earliest = function
+    | None -> earliest
+    | Some dates_list -> (
+      match safe_hd dates_list with
+      | None -> earliest
+      | Some date ->
+        if is_before date earliest then
+          (min_helper [@tailcall]) date (safe_tl dates_list)
+        else (min_helper [@tailcall]) earliest (safe_tl dates_list))
+  in
+  match safe_hd dates with
+  | Some date -> Some (min_helper date (safe_tl dates))
+  | None -> None
+
+(* Exercise: assoc list *)
+
+(* functions from section 8. *)
+
+(** [insert k v lst] is an association list that binds key [k] to value [v] and
+    otherwise is the same as [lst] *)
+let insert k v lst = (k, v) :: lst
+
+(** [lookup k lst] is [Some v] if association list [lst] binds key [k] to value
+    [v]; and is [None] if [lst] does not bind [k]. *)
+let rec lookup k = function
+  | [] -> None
+  | (k', v) :: t -> if k = k' then Some v else lookup k t
+
+let simple_map = [] |> insert 1 "one" |> insert 2 "two" |> insert 3 "three"
+let two_in_simple_map = lookup 2 simple_map
+let four_in_simple_map = lookup 4 simple_map
+
+(* Exercise: cards *)
+type suit = Spade | Heart | Diamond | Club
+
+type rank =
+  | Ace
+  | Two
+  | Three
+  | Four
+  | Five
+  | Six
+  | Seven
+  | Eight
+  | Nine
+  | Ten
+  | Jack
+  | Queen
+  | King
+
+type card = suit * rank
+
+let card1 = (Club, Ace)
+let card2 = (Heart, Queen)
+let card3 = (Diamond, Two)
+let card4 = (Spade, Seven)
+
+(* Exercise: matching *)
+let match1 = [ None ]
+let match2 = [ Some 8964; None ]
+let match3 = [ None ]
+let match4 = [ 8964 ]
+let match5 = []
+
+(* Exercise: quadrant *)
+type quad = I | II | III | IV
+type sign = Neg | Zero | Pos
+
+let sign (x : int) : sign = if x > 0 then Pos else if x = 0 then Zero else Neg
+
+let quadrant : int * int -> quad option =
+ fun (x, y) ->
+  match (sign x, sign y) with
+  | Pos, Pos -> Some I
+  | Neg, Pos -> Some II
+  | Neg, Neg -> Some III
+  | Pos, Neg -> Some IV
+  | _ -> None
+
+let quadrant_when : int * int -> quad option = function
+  | x, y when x > 0 && y > 0 -> Some I
+  | x, y when x < 0 && y > 0 -> Some II
+  | x, y when x < 0 && y < 0 -> Some III
+  | x, y when x > 0 && y < 0 -> Some IV
+  | _ -> None
+
+(* Exercise: depth*)
+type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree
+
+let rec depth : 'a tree -> int = function
+  | Leaf -> 0
+  | Node (_, left, right) -> 1 + max (depth left) (depth right)
+
+(* Exercise: shape *)
+let rec same_shape a b =
+  match (a, b) with
+  | Leaf, Leaf -> true
+  | Leaf, _ | _, Leaf -> false
+  | Node (_, left1, right1), Node (_, left2, right2) ->
+    same_shape left1 left2 && same_shape right1 right2
+
+(* Exercise: list max exn *)
+let list_max lst =
+  let rec max_helper max = function
+    | [] -> max
+    | head :: curr_list ->
+      if head > max then (max_helper [@tailcall]) head curr_list
+      else (max_helper [@tailcall]) max curr_list
+  in
+  match lst with
+  | [] -> raise (Failure "list_max")
+  | h :: t -> max_helper h t
+
+(* Exercise: list max exn string *)
+let list_max_string = function
+  | [] -> "empty"
+  | t -> string_of_int (list_max t)
+
+(* Exercise: is_bst *)
+let is_bst (root : ('a * 'b) tree) =
+  let rec valid_bst_helper some_min some_max = function
+    | Leaf -> true
+    (* I assume ('a * 'b) is a key-value pair here. *)
+    | Node ((key, _), left, right) ->
+      let within_bound =
+        (match some_min with
+          | Some min_val -> min_val <= key
+          | None -> true)
+        &&
+        match some_max with
+        | Some max_val -> max_val >= key
+        | None -> true
+      in
+      within_bound
+      && valid_bst_helper some_min (Some key) left
+      && valid_bst_helper (Some key) some_max right
+  in
+  valid_bst_helper None None root
+
+(* Exercise: quadrant poly *)
+let sign_poly = function
+  | x when x < 0 -> `Neg
+  | x when x = 0 -> `Zero
+  | _ -> `Pos
+
+let quadrant_poly x y =
+  match (sign_poly x, sign_poly y) with
+  | `Pos, `Pos -> Some `I
+  | `Neg, `Pos -> Some `II
+  | `Neg, `Neg -> Some `III
+  | `Pos, `Neg -> Some `IV
+  | _ -> None
