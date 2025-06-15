@@ -53,3 +53,19 @@ let sum_cube_odd n =
   |> List.filter (fun x -> x mod 2 <> 0)
   |> List.map (fun x -> x * x * x)
   |> List.fold_left ( + ) 0
+
+(* Exercise: exists *)
+let rec exists_rec p = function
+  | [] -> false
+  | h :: t -> p h || exists_rec p t
+
+let exists_fold p = List.fold_left (fun acc elt -> acc || p elt) false
+let exists_lib = List.exists
+
+(* Exercise: Account Balance *)
+let balance_left = List.fold_left (fun acc elt -> acc -. elt)
+let balance_right acc lst = acc -. List.fold_right ( +. ) lst 0.
+
+let rec balance_rec acc = function
+  | [] -> acc
+  | h :: t -> balance_rec (acc -. h) t
