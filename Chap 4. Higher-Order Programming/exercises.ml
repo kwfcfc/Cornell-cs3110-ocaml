@@ -69,3 +69,57 @@ let balance_right acc lst = acc -. List.fold_right ( +. ) lst 0.
 let rec balance_rec acc = function
   | [] -> acc
   | h :: t -> balance_rec (acc -. h) t
+
+(* Exercise: library uncurried *)
+let uncurried_append (lst0, lst1) = List.append lst0 lst1
+let uncurried_compare (string0, string1) = Char.compare string0 string1
+let uncurried_max (element1, elemtnt2) = Stdlib.max element1 elemtnt2
+
+(* Exercise: Map composition *)
+let map_composition f g (lst : 'a list) = List.map (fun x -> g x |> f) lst
+
+(* Exercise: More list fun*)
+let greater3 = List.filter (fun s -> String.length s > 3)
+let add1f = List.map (fun x -> x +. 1.0)
+
+let join lst sep =
+  match lst with
+  | [] -> ""
+  | [ s ] -> s
+  | h :: t -> List.fold_left (fun acc elt -> acc ^ sep ^ elt) h t
+
+(* Exercise: association list keys *)
+let keys lst = lst |> List.split |> fst |> List.sort_uniq compare
+
+(* Exercise: valid matrix *)
+let is_valid_matrix (lst : int list list) =
+  match lst with
+  | [] -> false
+  | head_row :: t ->
+    let row_length = List.length head_row in
+    row_length > 0 && List.for_all (fun row -> List.length row = row_length) t
+
+(* Exercise: row vector add *)
+let add_row_vectors = List.map2 ( + )
+
+(* Exercise: matrix add *)
+let add_matrices = List.map2 add_row_vectors
+
+(* Exercise: matrix multiply *)
+let vector_dot_product =
+  List.fold_left2 (fun acc left right -> acc + (left * right)) 0
+
+let get_column n = List.map (fun row -> List.nth row n)
+
+let matrix_transpose matrix =
+  let row1 = List.nth matrix 0 in
+  List.mapi (fun i _row -> List.map (fun row -> List.nth row i) matrix) row1
+
+let multiply_matrices left right =
+  let rightT = matrix_transpose right in
+  List.map
+    (fun left_row ->
+       List.map
+         (fun right_column -> vector_dot_product left_row right_column)
+         rightT)
+    left
