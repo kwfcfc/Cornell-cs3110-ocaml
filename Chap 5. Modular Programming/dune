@@ -1,4 +1,13 @@
 (test
  (name test)
- (modules exercises queue test)
- (libraries ounit2))
+ (modules test map_test fraction_test exercises)
+ (libraries queue map fraction ounit2))
+(library
+ (name queue)
+ (modules queue))
+(library
+ (name map)
+ (modules map tree))
+(library
+ (name fraction)
+ (modules fraction))

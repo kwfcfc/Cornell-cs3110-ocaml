@@ -13,6 +13,12 @@ let module_complex_tests =
   "Complex tests" >::: [ "zero" >:: test_zero; "add" >:: test_add ]
 
 let tests =
-  "test suite for exercises of Chapter 5" >::: [ module_complex_tests ]
+  "test suite for exercises of Chapter 5"
+  >::: [
+         module_complex_tests;
+         Map_test.tests;
+         Fraction_test.tests_fraction;
+         Fraction_test.tests_fraction_reduced;
+       ]
 
 let _ = run_test_tt_main tests
