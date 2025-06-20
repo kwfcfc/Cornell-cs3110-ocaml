@@ -60,3 +60,30 @@ module BstMap : Map = struct
 
   let bindings = Bst.to_list
 end
+
+(* Exercise: make char *)
+module CharMap = Stdlib.Map.Make (Char)
+(*
+   key is the char type. empty : 'a t is the type of map that gives a default
+   empty map. add : key -> 'a -> 'a t -> 'a t takes in a key, a value in 'a type
+   and a map, and return a new map. remove: key -> 'a t -> 'a t takes in a key
+   and a map, and return a new map with the key removed.
+*)
+
+(* Exercise: date order *)
+type date = { month : int; day : int }
+
+module Date = struct
+  type t = date
+
+  let compare =
+   fun d1 d2 ->
+    match compare d1.month d2.month with
+    | 0 -> compare d1.day d2.day
+    | c -> c
+end
+
+(* Exercise: calendar *)
+module DateMap = Stdlib.Map.Make (Date)
+
+type calendar = string DateMap.t

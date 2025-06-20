@@ -16,9 +16,11 @@ let tests =
   "test suite for exercises of Chapter 5"
   >::: [
          module_complex_tests;
-         Map_test.tests;
+         Map_test.bst_map_tests;
          Fraction_test.tests_fraction;
          Fraction_test.tests_fraction_reduced;
+         Map_test.char_map_tests;
+         Map_test.date_tests;
        ]
 
 let _ = run_test_tt_main tests

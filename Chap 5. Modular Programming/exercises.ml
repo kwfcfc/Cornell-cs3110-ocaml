@@ -92,5 +92,3 @@ let fill_batchedqueue n =
    list and it is constant time. Therefore, adding n elements to the queue with 
    each taking constant time gets the total time complexity to linear time.
 *)
-
-(* Exercise: binary search tree map *)
