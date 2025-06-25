@@ -74,6 +74,17 @@ let test_three_bindings _ =
   assert_equal map1_bindings map3_bindings;
   assert_equal [ ('x', 0); ('y', 1) ] map3_bindings
 
+let test_is_for _ =
+  let expected_map =
+    C.(
+      empty
+      |> add 'A' "A is for Alpha"
+      |> add 'E' "E is for Echo"
+      |> add 'S' "S is for Sierra"
+      |> add 'V' "V is for Victor")
+  in
+  assert_equal expected_map (Map.is_for use_map)
+
 let char_map_tests =
   "CharMap tests"
   >::: [
@@ -81,6 +92,7 @@ let char_map_tests =
          "remove_A_mem" >:: test_remove_A_mem;
          "bindings_after_remove_A" >:: test_bindings_after_remove_A;
          "bindings_of_three_maps" >:: test_three_bindings;
+         "is_for_for_maps" >:: test_is_for;
        ]
 
 (* Date and Calendar tests *)
@@ -131,6 +143,13 @@ let test_calendar_bindings_order _ =
     ]
     bindings
 
+let test_first_after _ =
+  assert_equal "Second Day" (Map.first_after calendar date_jan1);
+  assert_equal "February Start"
+    (Map.first_after calendar { month = 1; day = 16 });
+  assert_raises Not_found (fun () ->
+    Map.first_after calendar { month = 6; day = 4 })
+
 let date_tests =
   "Date and Calendar"
   >::: [
@@ -140,4 +159,6 @@ let date_tests =
          "calendar_lookup" >:: test_calendar_lookup;
          "calendar_remove" >:: test_calendar_remove;
          "calendar_bindings_order" >:: test_calendar_bindings_order;
+         (* ("calendar_print" >:: fun _ -> Map.print_calendar calendar); *)
+         "calendar_first_after" >:: test_first_after;
        ]

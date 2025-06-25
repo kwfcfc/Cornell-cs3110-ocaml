@@ -92,3 +92,9 @@ let fill_batchedqueue n =
    list and it is constant time. Therefore, adding n elements to the queue with 
    each taking constant time gets the total time complexity to linear time.
 *)
+
+(* Exercise: print calendar, see map.ml after module DateMap *)
+
+(* Exercise: is for, see map.ml after module CharMap *)
+
+(* Exercise: first after, see map.ml after module DateMap *)

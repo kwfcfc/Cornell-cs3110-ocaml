@@ -70,6 +70,9 @@ module CharMap = Stdlib.Map.Make (Char)
    and a map, and return a new map with the key removed.
 *)
 
+(* Exercise: is for *)
+let is_for = CharMap.mapi (fun k v -> Printf.sprintf "%c is for %s" k v)
+
 (* Exercise: date order *)
 type date = { month : int; day : int }
 
@@ -87,3 +90,33 @@ end
 module DateMap = Stdlib.Map.Make (Date)
 
 type calendar = string DateMap.t
+
+(* Exercise: print calendar *)
+let print_calendar calendar =
+  let month_string = function
+    | 1 -> "Jan"
+    | 2 -> "Feb"
+    | 3 -> "Mar"
+    | 4 -> "Apr"
+    | 5 -> "May"
+    | 6 -> "Jun"
+    | 7 -> "Jul"
+    | 8 -> "Aug"
+    | 9 -> "Sep"
+    | 10 -> "Oct"
+    | 11 -> "Nov"
+    | 12 -> "Dec"
+    | _ -> "Nan"
+  in
+  DateMap.iter
+    (fun entry ->
+       Printf.printf "%s %d: %s\n" (month_string entry.month) entry.day)
+    calendar
+
+(* Exercise: first after *)
+let first_after calendar date =
+  DateMap.min_binding
+    (DateMap.filter
+       (fun event_date _event -> compare event_date date > 0)
+       calendar)
+  |> snd
