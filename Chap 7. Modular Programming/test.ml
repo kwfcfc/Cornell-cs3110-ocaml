@@ -21,6 +21,8 @@ let tests =
          Fraction_test.tests_fraction_reduced;
          Map_test.char_map_tests;
          Map_test.date_tests;
+         Set_test.set_tests;
+         Print_test.tests;
        ]
 
 let _ = run_test_tt_main tests
