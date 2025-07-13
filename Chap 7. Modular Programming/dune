@@ -2,18 +2,27 @@
  (name test)
  (modules test map_test fraction_test set_test print_test exercises)
  (libraries queue map fraction print set ounit2))
+
 (library
  (name queue)
  (modules queue))
+
 (library
  (name map)
  (modules map tree))
+
 (library
  (name fraction)
  (modules fraction))
+
 (library
  (name set)
  (modules set))
+
 (library
  (name print)
  (modules print))
+
+(library
+ (name date)
+ (modules date))
