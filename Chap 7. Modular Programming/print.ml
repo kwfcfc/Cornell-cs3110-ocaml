@@ -21,3 +21,16 @@ module MyString = struct
 end
 
 module PrintString = Print (MyString)
+
+(* Exercise: Print Reuse *)
+
+(* The Print Functor requires the to_string function and a type for the module
+   to enable better reuse so that any module that implements this method can
+   print. *)
+
+(* Exercise: Print String revisited*)
+
+module StringWithPrint = struct
+  include String
+  include PrintString
+end
