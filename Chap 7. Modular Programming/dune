@@ -26,3 +26,7 @@
 (library
  (name date)
  (modules date))
+
+(library
+ (name algebra)
+ (modules algebra))
